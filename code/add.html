@@ -98,11 +98,17 @@
               </div>
             </div>
             <div class="panel-body">
-              <form action="#" method="" class="form-horizontal">
+              <form action="#" method="" class="addhero form-horizontal">
                 <div class="form-group">
                   <label for="heroName" class="col-sm-2 control-label">姓名</label>
                   <div class="col-sm-10">
                     <input type="text" class="form-control" id="heroName" name="heroName" placeholder="请输入姓名" />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="heroName" class="col-sm-2 control-label">昵称</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="heroNickName" name="heroNickName" placeholder="请输入昵称" />
                   </div>
                 </div>
                 <div class="form-group">
@@ -115,7 +121,7 @@
                   <label for="heroIcon" class="col-sm-2 control-label">头像</label>
                   <div class="col-sm-10">
                     <input type="file" class="file-input" id="heroIcon" name="heroIcon" />
-                    <img src="./images/盖伦.png" class="preview" alt="" />
+                    <img src="./images/gailun.png" class="preview" alt="" />
                   </div>
                 </div>
                 <div class="form-group">
@@ -135,6 +141,77 @@
 
   <script src="./lib/bootstrap/js/jquery-1.12.4.js"></script>
   <script src="./lib/bootstrap/js/bootstrap.min.js"></script>
+  <!-- <script>
+    $('form').on('submit', function (e) {
+      e.preventDefault();
+      // 必须使用FormData收集表单数据，因为有图片上传
+      var fd = new FormData(this); // 这里必须使用表单的dom对象，也就是this
+      // 注意检查 表单各项是否有name值
+      $.ajax({
+        type: 'POST',
+        url: 'http://localhost:3006/my/addhero',
+        headers: {
+          // 接口是以 /my 开头的，所以需要携带token
+          Authorization: localStorage.getItem('token')
+        },
+        data: fd,
+        processData: false, // 使用FormData必须加入的
+        contentType: false, // 使用FormData必须加入的
+        success: function (res) {
+          alert(res.message);
+          if (res.status === 0) {
+            // 添加成功，跳转到index.html
+            location.href = 'index.html';
+          }
+        },
+        // complete在ajax完成之后触发。无论成功还是失败都会触发
+        complete: function (xhr) {
+          // console.log(xhr);
+          if (xhr.responseJSON.status === 1 && xhr.responseJSON.message === '身份认证失败') {
+            // 清除假token或过期的token，然后跳转到登录页
+            localStorage.removeItem('token');
+            location.href = 'login.html';
+          }
+        }
+      });
+    });
+  </script> -->
+  <script>
+    $('.form-horizontal').on('submit', function (e) {
+      //阻止默认跳转
+      e.preventDefault();
+      var fd = new FormData(this);
+      console.log(localStorage.getItem('token'));
+
+      $.ajax({
+        type: 'POST',
+        url: 'http://localhost:3006/my/addhero',
+        data: fd,
+        headers: {
+          Authorization: localStorage.getItem('token')
+        },
+        processData: false,
+        contentType: false,
+        success: function (res) {
+          console.log(res);
+
+          alert(res.message);
+          if (res.status === 0) {
+            location.href = 'index.html';
+
+          }
+          // alert(res.message);
+        },
+        complete: function (hxr) {
+          console.log(hxr);
+          if (hxr.responseJSON.status === 1 && hxr.responseJSON.message === '身份认证失败') {
+            location.href = 'login.html';
+            localStorage.removeItem('token');
+          }
+        }
+      })
+    })
+  </script>
 </body>
 
 </html>

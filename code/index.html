@@ -148,31 +148,16 @@
               <table id="my-table" class="table table-bordered mp15">
                 <thead>
                   <tr>
-                    <th width="25%">头像</th>
-                    <th width="25%">姓名</th>
-                    <th width="25%">技能</th>
-                    <th width="25%">操作</th>
+                    <th width="20%">头像</th>
+                    <th width="20%">姓名</th>
+                    <th width="20%">昵称</th>
+                    <th width="20%">技能</th>
+                    <th width="20%">操作</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td><img src="./images/gailun.png" alt="" /></td>
-                    <td>盖伦</td>
-                    <td>躲草丛</td>
-                    <td>
-                      <button onclick="location.href='./edit.html'" class="btn btn-primary">编辑</button>
-                      <button onclick="alert('你真狠')" class="btn btn-danger">删除</button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td><img src="./images/gailun.png" alt="" /></td>
-                    <td>盖伦</td>
-                    <td>躲草丛</td>
-                    <td>
-                      <button onclick="location.href='./edit.html'" class="btn btn-primary">编辑</button>
-                      <button onclick="alert('你真狠')" class="btn btn-danger">删除</button>
-                    </td>
-                  </tr>
+
+
 
                 </tbody>
               </table>
@@ -204,7 +189,46 @@
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="./lib/bootstrap/js/bootstrap.min.js"></script>
   <script src="./lib/js/template-web.js"></script>
+  <script type='text/html' id="list">
+    {{each data val}}
+    <tr>
+      <td><img src="http://localhost:3006/{{val.img_url}}" alt="" /></td>
+      <td> {{val.heroname}}</td>
+      <td>{{val.nickname}}</td>
+      <td>{{val.skill}}</td>
+      <td>
+        <button onclick="location.href='./edit.html'" class="btn btn-primary">编辑</button>
+        <button class="btn btn-danger">删除</button>
+      </td>
+    </tr>
+    {{/each}}
+  </script>
+  <script>
+    getData();
 
+    function getData() {
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:3006/my/heroeslist',
+        success: function (res) {
+          if (res.status === 0) {
+            var newTr = template('list', res);
+            $('tbody').html(newTr);
+          }
+        },
+        headers: {
+          Authorization: localStorage.getItem('token')
+        },
+        // complete: function (hxr) {
+        //   if (hxr.responseJSON.status === 1 && hxr.responseJSON.message === "身份认证失败") {
+        //     localStorage.removeItem('token');
+        //     location.href = 'login.index';
+        //   }
+        // }
+
+      });
+    }
+  </script>
 </body>
-</html>
 
+</html>
